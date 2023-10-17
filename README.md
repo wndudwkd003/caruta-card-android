@@ -45,6 +45,8 @@
 
 ## 라이센스
 
+[Glide LICENSE : BSD, part MIT and Apache 2.0. License](https://github.com/bumptech/glide/blob/master/LICENSE)
+
 
   
 
