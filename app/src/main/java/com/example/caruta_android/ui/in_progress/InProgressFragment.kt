@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.GridLayout
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.caruta_android.adapters.CardGridAdapter
@@ -14,6 +15,7 @@ import com.example.caruta_android.databinding.FragmentInProgressBinding
 import com.example.caruta_android.utils.CardCreator
 import com.example.caruta_android.utils.TimeFormatConvertor
 import com.example.caruta_android.views.CountdownDialog
+import java.text.FieldPosition
 
 class InProgressFragment : Fragment() {
 
@@ -34,9 +36,12 @@ class InProgressFragment : Fragment() {
         viewModel = ViewModelProvider(this)[InProgressViewModel::class.java]
 
         val cardStackAdapter = CardStackAdapter()
-        viewModel.showCards.value?.let {
-            cardStackAdapter.showCards = it
-            viewBinding.rvCardStack.adapter = cardStackAdapter
+        cardStackAdapter.showCards = mutableListOf()
+        viewBinding.rvCardStack.adapter = cardStackAdapter
+
+
+        viewModel.selectedCard.observe(viewLifecycleOwner) {
+            cardStackAdapter.addCardItem(it)
         }
 
 
@@ -44,8 +49,16 @@ class InProgressFragment : Fragment() {
         viewModel.selectCards.value?.let {
             cardGridAdapter = CardGridAdapter(it)
             cardGridAdapter?.listener = object: CardGridAdapter.OnItemClickListener {
-                override fun onClick(id: Int) {
-                    cardStackAdapter.click(id)
+                override fun onClick(id: String, position: Int) {
+                    val checkedIndex = cardStackAdapter.checkingCard(id)
+                    if (checkedIndex != -1) {
+                        cardGridAdapter?.changeItemVisible(position)
+
+                        cardStackAdapter.click(checkedIndex)
+                        viewModel.selectRandomCard()
+                    } else {
+                        Toast.makeText(requireContext(), "틀렸습니다!", Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
             viewBinding.rvCardGrid.adapter = cardGridAdapter
@@ -63,6 +76,7 @@ class InProgressFragment : Fragment() {
 
         return viewBinding.root
     }
+
 
     private fun initProgress() {
         viewModel.startTimer()

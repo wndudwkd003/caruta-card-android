@@ -47,10 +47,14 @@ class CardCreator(
     }
 
     fun getConversionShowCards() : MutableList<CarutaCard> {
+        showCards!!.shuffle()
+
         return showCards!!
     }
 
     fun getConversionSelectCards() : MutableList<CarutaCard> {
+        selectCards!!.shuffle()
+
         return selectCards!!
     }
 

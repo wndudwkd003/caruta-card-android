@@ -19,6 +19,9 @@ class InProgressViewModel : ViewModel() {
     val elapsedTime: LiveData<String> get() = _elapsedTime
     private var rawTime = 0L
 
+    private val _selectedCard = MutableLiveData<CarutaCard>()
+    val selectedCard: LiveData<CarutaCard> get() = _selectedCard
+
     private val _showCards = MutableLiveData<MutableList<CarutaCard>>()
     val showCards: LiveData<MutableList<CarutaCard>> get() = _showCards
 
@@ -27,11 +30,24 @@ class InProgressViewModel : ViewModel() {
 
     init {
         val cardCreator = CardCreator(30)
+
         _showCards.value = cardCreator.getConversionShowCards()
+
         _selectCards.value = cardCreator.getConversionSelectCards()
+
+        selectRandomCard()
     }
 
+    fun selectRandomCard() {
+        if (_showCards.value?.isNotEmpty() == true) {
+            val randomCard = _showCards.value?.random()
+            randomCard?.let {
+                _selectedCard.postValue(it)
+                _showCards.value?.remove(it)
+            }
 
+        }
+    }
 
     fun startTimer() {
         uiScope.launch {
@@ -40,6 +56,9 @@ class InProgressViewModel : ViewModel() {
                 rawTime += 1L
                 _elapsedTime.postValue(TimeFormatConvertor.convertToTimeFormat(rawTime))
 
+                if (rawTime % 500 == 0L) {
+                    selectRandomCard()
+                }
             }
         }
     }

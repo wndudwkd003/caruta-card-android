@@ -22,6 +22,7 @@
         android:background="@color/white_grey" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:minHeight="123dp"
         android:layout_marginStart="5dp"
         android:layout_marginTop="15dp"
         android:id="@+id/rvCardStack"

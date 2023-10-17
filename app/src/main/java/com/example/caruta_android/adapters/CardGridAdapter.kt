@@ -17,14 +17,11 @@ import com.example.caruta_android.databinding.CarutaCardItemBinding
 class CardGridAdapter(private val selectCards: MutableList<CarutaCard>) : RecyclerView.Adapter<CardGridAdapter.ViewHolder>() {
 
     interface OnItemClickListener {
-        fun onClick(id: Int)
+        fun onClick(id: String, position: Int)
     }
 
     var listener: OnItemClickListener? = null
 
-    init {
-        selectCards.shuffle()
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardGridAdapter.ViewHolder {
         val binding = CarutaCardItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -44,10 +41,14 @@ class CardGridAdapter(private val selectCards: MutableList<CarutaCard>) : Recycl
 
         holder.binding(item)
         holder.itemView.setOnClickListener {
-            holder.itemView.visibility = View.INVISIBLE
-            selectCards[position].flag = true
-            listener?.onClick(item.id.toInt())
+            listener?.onClick(item.id, position)
         }
+    }
+
+
+    fun changeItemVisible(position: Int) {
+        selectCards[position].flag = true
+        notifyItemChanged(position)
     }
 
     inner class ViewHolder(private val viewBinding: CarutaCardItemBinding) : RecyclerView.ViewHolder(viewBinding.root){

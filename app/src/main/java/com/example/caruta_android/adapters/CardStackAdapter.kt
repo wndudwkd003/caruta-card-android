@@ -36,11 +36,23 @@ class CardStackAdapter() : RecyclerView.Adapter<CardStackAdapter.ViewHolder>() {
         holder.binding(item)
     }
 
-    fun click(id: Int) {
-        if (id in 0 until showCards.size) {
-            showCards[id].flag = true
-            notifyItemChanged(id)
+    fun click(index: Int) {
+        showCards[index].flag = true
+        notifyItemChanged(index)
+    }
+
+    fun addCardItem(item: CarutaCard) {
+        showCards.add(item)
+        notifyItemChanged(showCards.size - 1)
+    }
+
+    fun checkingCard(id: String): Int {
+        for (i in 0 until showCards.size) {
+            if (showCards[i].id == id) {
+                return i
+            }
         }
+        return -1
     }
 
 
