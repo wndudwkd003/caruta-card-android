@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.view.Gravity
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -12,7 +13,9 @@ import com.bumptech.glide.request.RequestOptions
 import com.example.caruta_android.classes.CarutaCard
 import com.example.caruta_android.databinding.CarutaCardItemBinding
 
-class CardStackAdapter(private val showCards: MutableList<CarutaCard>) : RecyclerView.Adapter<CardStackAdapter.ViewHolder>() {
+class CardStackAdapter() : RecyclerView.Adapter<CardStackAdapter.ViewHolder>() {
+
+    lateinit var showCards: MutableList<CarutaCard>
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardStackAdapter.ViewHolder {
         val binding = CarutaCardItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -23,8 +26,23 @@ class CardStackAdapter(private val showCards: MutableList<CarutaCard>) : Recycle
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = showCards[position]
+        if (item.flag) {
+            holder.itemView.visibility = View.GONE
+            holder.itemView.layoutParams = RecyclerView.LayoutParams(0, 0)
+        } else {
+            holder.itemView.visibility = View.VISIBLE
+            holder.itemView.layoutParams = RecyclerView.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        }
         holder.binding(item)
     }
+
+    fun click(id: Int) {
+        if (id in 0 until showCards.size) {
+            showCards[id].flag = true
+            notifyItemChanged(id)
+        }
+    }
+
 
     inner class ViewHolder(private val viewBinding: CarutaCardItemBinding) : RecyclerView.ViewHolder(viewBinding.root){
         fun binding(item: CarutaCard) {

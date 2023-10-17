@@ -2,8 +2,10 @@ package com.example.caruta_android.adapters
 
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -13,6 +15,12 @@ import com.example.caruta_android.classes.CarutaCard
 import com.example.caruta_android.databinding.CarutaCardItemBinding
 
 class CardGridAdapter(private val selectCards: MutableList<CarutaCard>) : RecyclerView.Adapter<CardGridAdapter.ViewHolder>() {
+
+    interface OnItemClickListener {
+        fun onClick(id: Int)
+    }
+
+    var listener: OnItemClickListener? = null
 
     init {
         selectCards.shuffle()
@@ -27,7 +35,19 @@ class CardGridAdapter(private val selectCards: MutableList<CarutaCard>) : Recycl
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = selectCards[position]
+
+        if (item.flag) {
+            holder.itemView.visibility = View.INVISIBLE
+        } else {
+            holder.itemView.visibility = View.VISIBLE
+        }
+
         holder.binding(item)
+        holder.itemView.setOnClickListener {
+            holder.itemView.visibility = View.INVISIBLE
+            selectCards[position].flag = true
+            listener?.onClick(item.id.toInt())
+        }
     }
 
     inner class ViewHolder(private val viewBinding: CarutaCardItemBinding) : RecyclerView.ViewHolder(viewBinding.root){
@@ -46,7 +66,6 @@ class CardGridAdapter(private val selectCards: MutableList<CarutaCard>) : Recycl
             }
             viewBinding.textView.gravity = Gravity.CENTER
             viewBinding.textView.text = item.id
-
         }
     }
 }

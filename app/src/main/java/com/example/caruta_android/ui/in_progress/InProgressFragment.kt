@@ -6,11 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.GridLayout
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.caruta_android.adapters.CardGridAdapter
 import com.example.caruta_android.adapters.CardStackAdapter
 import com.example.caruta_android.databinding.FragmentInProgressBinding
 import com.example.caruta_android.utils.CardCreator
+import com.example.caruta_android.utils.TimeFormatConvertor
 import com.example.caruta_android.views.CountdownDialog
 
 class InProgressFragment : Fragment() {
@@ -29,19 +31,26 @@ class InProgressFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _viewBinding = FragmentInProgressBinding.inflate(layoutInflater, container, false)
+        viewModel = ViewModelProvider(this)[InProgressViewModel::class.java]
 
-        val cardCreator = CardCreator(30)
-        val showCards = cardCreator.getConversionShowCards()
-        val selectCards = cardCreator.getConversionSelectCards()
+        val cardStackAdapter = CardStackAdapter()
+        viewModel.showCards.value?.let {
+            cardStackAdapter.showCards = it
+            viewBinding.rvCardStack.adapter = cardStackAdapter
+        }
 
-        val cardStackAdapter = CardStackAdapter(showCards)
-        viewBinding.rvCardStack.adapter = cardStackAdapter
 
-        val cardGridAdapter = CardGridAdapter(selectCards)
-        viewBinding.rvCardGrid.adapter = cardGridAdapter
-
-        val gridLayoutManager = GridLayoutManager(requireContext(), 4)
-        viewBinding.rvCardGrid.layoutManager = gridLayoutManager
+        var cardGridAdapter: CardGridAdapter?
+        viewModel.selectCards.value?.let {
+            cardGridAdapter = CardGridAdapter(it)
+            cardGridAdapter?.listener = object: CardGridAdapter.OnItemClickListener {
+                override fun onClick(id: Int) {
+                    cardStackAdapter.click(id)
+                }
+            }
+            viewBinding.rvCardGrid.adapter = cardGridAdapter
+            viewBinding.rvCardGrid.layoutManager = GridLayoutManager(requireContext(), 4)
+        }
 
         val startCountdownDialog = CountdownDialog(requireContext())
         startCountdownDialog.countDownListener = object : CountdownDialog.CountDownListener {
@@ -56,7 +65,10 @@ class InProgressFragment : Fragment() {
     }
 
     private fun initProgress() {
-
+        viewModel.startTimer()
+        viewModel.elapsedTime.observe(viewLifecycleOwner) { timeText ->
+            viewBinding.inProgressState.tvTime.text = timeText
+        }
 
     }
 

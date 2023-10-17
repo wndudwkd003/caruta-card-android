@@ -5,6 +5,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TextView
+        android:layout_marginHorizontal="5dp"
+        android:gravity="center"
         android:id="@+id/tvTimeTitle"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -15,6 +17,8 @@
 
 
     <TextView
+        android:layout_marginHorizontal="20dp"
+        android:gravity="center"
         android:id="@+id/tvCurrentScoreTitle"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toEndOf="@id/tvTimeTitle"
@@ -24,6 +28,8 @@
         android:text="현재 점수" />
 
     <TextView
+        android:layout_marginHorizontal="5dp"
+        android:gravity="center"
         android:id="@+id/tvMaxScoreTitle"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toEndOf="@id/tvCurrentScoreTitle"
@@ -33,7 +39,9 @@
         android:text="최고 점수" />
 
     <TextView
-        android:paddingHorizontal="10dp"
+        android:gravity="center"
+        android:minWidth="110dp"
+        android:paddingHorizontal="13dp"
         android:background="@drawable/rounded_shape"
         android:textSize="20sp"
         android:layout_marginTop="25dp"
@@ -47,6 +55,8 @@
 
 
     <TextView
+        android:gravity="center"
+        android:minWidth="110dp"
         android:paddingHorizontal="10dp"
         android:background="@drawable/rounded_shape"
         android:textSize="20sp"
@@ -60,6 +70,8 @@
         android:text="000000" />
 
     <TextView
+        android:gravity="center"
+        android:minWidth="110dp"
         android:paddingHorizontal="10dp"
         android:background="@drawable/rounded_shape"
         android:textSize="20sp"

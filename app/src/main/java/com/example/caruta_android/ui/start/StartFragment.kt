@@ -20,8 +20,6 @@ class StartFragment : Fragment() {
     private var _viewBinding: FragmentStartBinding? = null
     private val viewBinding get() = _viewBinding!!
 
-    private lateinit var viewModel: StartViewModel
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
